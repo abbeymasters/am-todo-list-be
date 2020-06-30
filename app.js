@@ -96,6 +96,24 @@ app.put('/api/todos/:id', async (req, res) => {
     }
 });
 
+app.delete('/api/todos/:id', async (req, res) => {
+    try {
+        const result = await client.query(`
+        DELETE FROM todos
+        WHERE id = $1
+        AND user_id = $2;
+      `, [req.params.id, req.userId]);
+
+        res.json(result.rows[0]);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
 app.listen(PORT, () => {
     console.log('server running on PORT', PORT);
 });
