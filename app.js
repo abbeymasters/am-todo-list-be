@@ -42,3 +42,60 @@ app.use('/api/auth', authRoutes);
 const ensureAuth = require('./lib/auth/ensure-auth');
 app.use('/api', ensureAuth);
 
+app.get('/api/todos', async (req, res) => {
+    try {
+        const result = await client.query(`
+        SELECT * FROM todos
+        WHERE user_id = $1
+        ORDER BY id ASC;
+      `, [req.userId]);
+        res.json(result.rows);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.mssage || err
+        });
+    }
+});
+
+app.post('/api/todos', async (req, res) => {
+    const todo = req.body.title;
+    try {
+        const result = await client.query(`
+        INSERT INTO todos
+        (title, complete, user_id)
+        VALUES ($1, false, $2)
+        RETURNING *
+        `, [todo, req.userId]);
+        res.json(result.rows[0]);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+app.put('/api/todos/:id', async (req, res) => {
+    try {
+        const result = await client.query(`
+          UPDATE todos
+          SET complete = $1
+          WHERE id = $2
+          AND user_id = $3;
+        `, [req.body.complete, req.params.id, req.userId]);
+        res.json(result.rows[0]);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+app.listen(PORT, () => {
+    console.log('server running on PORT', PORT);
+});
