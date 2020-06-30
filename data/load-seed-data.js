@@ -23,7 +23,7 @@ async function run() {
         );
         console.log('seed data loaded into database');
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
     }
     finally {

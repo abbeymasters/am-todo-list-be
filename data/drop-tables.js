@@ -11,7 +11,7 @@ async function run() {
         `);
         console.log('drop tables complete');
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
     }
     finally {

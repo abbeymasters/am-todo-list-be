@@ -42,7 +42,7 @@ app.use('/api/auth', authRoutes);
 const ensureAuth = require('./lib/auth/ensure-auth');
 app.use('/api', ensureAuth);
 
-app.get('/api/todos', async (req, res) => {
+app.get('/api/todos', async(req, res) => {
     try {
         const result = await client.query(`
         SELECT * FROM todos
@@ -51,7 +51,7 @@ app.get('/api/todos', async (req, res) => {
       `, [req.userId]);
         res.json(result.rows);
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
         res.status(500).json({
             error: err.mssage || err
@@ -59,7 +59,7 @@ app.get('/api/todos', async (req, res) => {
     }
 });
 
-app.post('/api/todos', async (req, res) => {
+app.post('/api/todos', async(req, res) => {
     const todo = req.body.title;
     try {
         const result = await client.query(`
@@ -70,7 +70,7 @@ app.post('/api/todos', async (req, res) => {
         `, [todo, req.userId]);
         res.json(result.rows[0]);
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
         res.status(500).json({
             error: err.message || err
@@ -78,7 +78,7 @@ app.post('/api/todos', async (req, res) => {
     }
 });
 
-app.put('/api/todos/:id', async (req, res) => {
+app.put('/api/todos/:id', async(req, res) => {
     try {
         const result = await client.query(`
           UPDATE todos
@@ -88,7 +88,7 @@ app.put('/api/todos/:id', async (req, res) => {
         `, [req.body.complete, req.params.id, req.userId]);
         res.json(result.rows[0]);
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
         res.status(500).json({
             error: err.message || err
@@ -96,7 +96,7 @@ app.put('/api/todos/:id', async (req, res) => {
     }
 });
 
-app.delete('/api/todos/:id', async (req, res) => {
+app.delete('/api/todos/:id', async(req, res) => {
     try {
         const result = await client.query(`
         DELETE FROM todos
@@ -106,7 +106,7 @@ app.delete('/api/todos/:id', async (req, res) => {
 
         res.json(result.rows[0]);
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
         res.status(500).json({
             error: err.message || err

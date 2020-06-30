@@ -21,7 +21,7 @@ async function run() {
         
         console.log('finished creating tables');
     }
-    catch (err) {
+    catch(err) {
         console.log(err);
     }
     finally {
